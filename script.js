@@ -1,19 +1,18 @@
 const counterDisplay = document.getElementById("counter");
 
+const plusButton = document.getElementById("plus-button");
+const minusButton = document.getElementById("minus-button");
 
 /**
  * fetch counter from database
  */
-async function fetchCounter() {
+async function fetchCounter(getUrl) {
     try {
-        // define URL
-        const getUrl = "https://api.counterapi.dev/v1/halloween/CTL"
-
         // fetch response
         const response = await fetch(getUrl);
 
         // check response okay
-        if(!response.ok) {
+        if (!response.ok) {
             throw new Error("Response status: ", response.status);
         }
 
@@ -21,7 +20,7 @@ async function fetchCounter() {
         const json = await response.json();
         return json.count;
 
-    } catch(error) {
+    } catch (error) {
         console.error(error);
     }
 }
@@ -30,9 +29,36 @@ async function fetchCounter() {
  * fetch counter from API and display on counterDisplay
  */
 async function updateCounter() {
-    const counter = await fetchCounter();
+    // define URL
+    const getUrl = "https://api.counterapi.dev/v1/halloween/CTL"
+    // get counter and update
+    const counter = await fetchCounter(getUrl);
     counterDisplay.innerHTML = counter;
 }
 
-// update counter every second
-setInterval(updateCounter, 1000);
+/**
+ * minus button
+ */
+async function minusButtonClick() {
+    const getUrl = "https://api.counterapi.dev/v1/halloween/CTL/down"
+    // get counter and update
+    const counter = await fetchCounter(getUrl);
+    counterDisplay.innerHTML = counter;
+}
+
+/**
+ * plus button
+ */
+async function plusButtonClick() {
+    const getUrl = "https://api.counterapi.dev/v1/halloween/CTL/up"
+    // get counter and update
+    const counter = await fetchCounter(getUrl);
+    counterDisplay.innerHTML = counter;
+}
+
+
+minusButton.onclick = minusButtonClick;
+plusButton.onclick = plusButtonClick;
+
+// update counter every minute
+setInterval(updateCounter, 60000);
