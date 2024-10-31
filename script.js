@@ -1,4 +1,9 @@
+const counterDisplay = document.getElementById("counter");
 
+
+/**
+ * fetch counter from database
+ */
 async function fetchCounter() {
     try {
         // define URL
@@ -14,8 +19,20 @@ async function fetchCounter() {
 
         // get json
         const json = await response.json();
-        
+        return json.count;
+
     } catch(error) {
         console.error(error);
     }
 }
+
+/**
+ * fetch counter from API and display on counterDisplay
+ */
+async function updateCounter() {
+    const counter = await fetchCounter();
+    counterDisplay.innerHTML = counter;
+}
+
+// update counter every second
+setInterval(updateCounter, 1000);
